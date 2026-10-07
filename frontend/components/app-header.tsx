@@ -1,95 +1,39 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { BrainCircuit, Github } from "lucide-react";
+import { BrainCircuit } from "lucide-react";
+import { useState, useEffect } from "react";
+import Link from "next/link";
 
 export function AppHeader() {
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    // Ensure light mode is clean
+    document.documentElement.classList.remove('dark');
+
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <motion.header
-      initial={{ opacity: 0, y: -16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      className="fixed inset-x-0 top-0 z-50"
-    >
-      <div
-        className="border-b border-slate-200/70 backdrop-blur-xl"
-        style={{ background: "rgba(255,255,255,0.82)" }}
-      >
-        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-5">
-
-          {/* Logo + wordmark */}
-          <div className="flex items-center gap-2.5">
-            <div
-              className="flex h-8 w-8 items-center justify-center rounded-lg shadow-sm"
-              style={{
-                background: "linear-gradient(135deg, #ec4899 0%, #8b5cf6 60%, #0ea5e9 100%)",
-              }}
-            >
-              <BrainCircuit className="h-4 w-4 text-white" strokeWidth={1.8} />
-            </div>
-
-            <div className="leading-none">
-              <span
-                className="block text-[15px] font-bold tracking-tight"
-                style={{
-                  fontFamily: "var(--font-display)",
-                  background: "linear-gradient(135deg, #db2777, #7c3aed)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                  backgroundClip: "text",
-                }}
-              >
-                CogniGraph AI
-              </span>
-              <span className="block text-[10px] font-semibold tracking-widest text-slate-400 uppercase">
-                Graph-RAG Platform
-              </span>
-            </div>
-          </div>
-
-          {/* Centre nav */}
-          <nav className="hidden items-center gap-7 md:flex">
-            {["Features", "Architecture", "Benchmarks"].map((label) => (
-              <span
-                key={label}
-                className="cursor-default text-[13px] font-medium text-slate-500 transition-colors hover:text-slate-800"
-                style={{ fontFamily: "var(--font-body)" }}
-              >
-                {label}
-              </span>
-            ))}
-          </nav>
-
-          {/* Right actions */}
-          <div className="flex items-center gap-3">
-            <span
-              className="hidden rounded-full border border-pink-200 bg-pink-50 px-2.5 py-1 text-[11px] font-semibold text-pink-600 sm:inline-flex"
-            >
-              Phase 4 · Entity Graphs
-            </span>
-
-            <a
-              href="https://github.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-400 transition-all hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700"
-              aria-label="GitHub"
-            >
-              <Github className="h-4 w-4" />
-            </a>
-
-            <button
-              className="rounded-lg px-3.5 py-1.5 text-[13px] font-semibold text-white shadow-sm transition-all hover:opacity-90 hover:shadow"
-              style={{
-                fontFamily: "var(--font-body)",
-                background: "linear-gradient(135deg, #ec4899, #8b5cf6)",
-              }}
-            >
-              Try it free
-            </button>
-          </div>
+    <header className={`fixed top-0 inset-x-0 h-16 z-50 flex items-center justify-between px-6 sm:px-12 transition-all duration-300 ${isScrolled ? 'bg-white/80 backdrop-blur-md shadow-sm border-b border-slate-200' : 'bg-transparent'}`}>
+      <Link href="/" className="flex items-center gap-3 cursor-pointer">
+        <div className="h-9 w-9 rounded-xl flex items-center justify-center bg-gradient-to-br from-[#ec4899] via-[#8b5cf6] to-[#0ea5e9] shadow-md">
+          <BrainCircuit className="w-5 h-5 text-white" strokeWidth={2} />
         </div>
+        <span className="text-xl font-black tracking-tight text-slate-900">Omni</span>
+      </Link>
+      
+      <div className="flex items-center gap-6">
+        <nav className="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
+          <Link href="/" className="hover:text-slate-900 transition-colors">Home</Link>
+          <Link href="/#tools" className="hover:text-slate-900 transition-colors">Tools</Link>
+          <Link href="/#contact" className="hover:text-slate-900 transition-colors">Contact</Link>
+        </nav>
       </div>
-    </motion.header>
+    </header>
   );
 }

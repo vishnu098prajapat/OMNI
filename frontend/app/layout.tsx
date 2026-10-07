@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import "./globals.css";
+import { AppHeader } from "@/components/app-header";
 
 export const metadata: Metadata = {
   title: "CogniGraph AI — Graph-RAG Document Intelligence",
@@ -18,7 +19,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           rel="stylesheet"
         />
       </head>
-      <body className="min-h-screen font-sans antialiased">{children}</body>
+      <body className="min-h-screen font-sans antialiased bg-[#FAF8F5] dark:bg-slate-950 text-slate-900 dark:text-white transition-colors duration-300">
+        <AppHeader />
+        {children}
+      </body>
     </html>
   );
 }

@@ -51,18 +51,7 @@ export default function ToolsHub() {
   return (
     <div className="min-h-screen bg-slate-50" style={{ fontFamily: "'Inter', sans-serif" }}>
       {/* Simple Header */}
-      <header className="h-16 bg-white border-b border-slate-200 flex items-center px-6 sm:px-12">
-        <Link href="/" className="flex items-center gap-2 text-slate-500 hover:text-slate-900 transition-colors mr-auto">
-          <ChevronLeft className="w-5 h-5" />
-          <span className="text-sm font-semibold">Back to home</span>
-        </Link>
-        <div className="flex items-center gap-2 cursor-pointer absolute left-1/2 -translate-x-1/2">
-          <div className="h-7 w-7 rounded-lg flex items-center justify-center bg-slate-900 shadow-sm">
-            <Zap className="w-4 h-4 text-white" />
-          </div>
-          <span className="text-xl font-bold tracking-tight text-slate-900">Omni</span>
-        </div>
-      </header>
+      
 
       {/* Grid */}
       <main className="max-w-6xl mx-auto py-16 px-6">
@@ -91,3 +80,4 @@ export default function ToolsHub() {
     </div>
   );
 }
+

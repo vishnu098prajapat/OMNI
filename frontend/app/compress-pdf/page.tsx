@@ -69,66 +69,61 @@ export default function CompressPdfTool() {
   };
 
   return (
-    <main className="relative min-h-screen bg-[#FAF8F5]" style={{ fontFamily: "'Inter', sans-serif" }}>
+    <main className="min-h-screen bg-transparent relative overflow-hidden flex flex-col pt-16">
       
-      {/* Tool Header */}
-      <header className="h-20 bg-[#FAF8F5] border-b border-slate-100 flex items-center px-6 sm:px-12 fixed top-0 w-full z-50">
-        <Link href="/" className="flex items-center gap-2 cursor-pointer mr-8">
-          <div className="h-8 w-8 rounded-lg flex items-center justify-center bg-[#6366F1] shadow-sm">
-            <Zap className="w-5 h-5 text-white" />
-          </div>
-          <span className="text-xl font-bold tracking-tight text-slate-900 hidden sm:block">Omni</span>
-        </Link>
-        <div className="h-6 w-px bg-slate-200 mx-2 hidden sm:block"></div>
-        <Link href="/#tools" className="flex items-center gap-2 text-slate-500 hover:text-slate-900 transition-colors ml-2">
-          <ChevronLeft className="w-4 h-4" />
-          <span className="text-sm font-semibold">Back to Tools</span>
-        </Link>
-      </header>
+      <div className="absolute top-0 inset-x-0 h-[40vh] bg-gradient-to-b from-sky-50/50 dark:from-sky-900/20 to-transparent -z-10 pointer-events-none"></div>
 
-      <div className="pt-32 pb-20 px-6 flex flex-col items-center justify-center min-h-[90vh]">
-        
-        <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-sky-50 pl-1 pr-4 py-1 border border-sky-100">
-          <span className="bg-sky-500 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full"><Minimize2 className="w-3 h-3 inline-block mr-1"/>Power Tool</span>
-          <span className="text-sm font-medium text-sky-700">Lossless Compression</span>
-        </div>
+      <div className="flex-1 flex flex-col items-center pb-20 pt-8 px-4 sm:px-6">
+        <div className="w-full max-w-[1000px] flex flex-col items-center">
+          
+          <div className="w-full flex items-center justify-center relative mb-8">
+            <Link href="/#tools" className="absolute left-0 sm:left-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-all font-medium text-sm">
+              <ChevronLeft className="w-4 h-4" />
+              Back to Tools
+            </Link>
 
-        <div className="text-center mb-10 w-full">
-          <div className="max-w-[1200px] mx-auto mb-4 w-full">
-            <h1 className="text-5xl sm:text-7xl lg:text-[88px] font-bold tracking-tight text-[#111827] leading-[1.05]">
-              <span className="whitespace-nowrap block">Compress PDFs</span>
-              <span className="text-sky-500 italic pr-2">without</span> 
-              <span className="relative z-10 inline-block">
-                losing quality.
-                <span className="absolute bottom-1 left-0 w-full h-[28px] bg-amber-300/60 -z-10 rounded-sm transform -rotate-1"></span>
-              </span>
-            </h1>
+            <div className="inline-flex items-center gap-2 rounded-full bg-sky-50 dark:bg-sky-900/30 pl-1 pr-4 py-1 border border-sky-100 dark:border-sky-800 shadow-sm">
+              <span className="bg-sky-500 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-full"><Minimize2 className="w-3 h-3 inline-block mr-1"/>Power Tool</span>
+              <span className="text-sm font-medium text-sky-700 dark:text-sky-300">Lossless Compression</span>
+            </div>
           </div>
-          <p className="max-w-2xl mx-auto text-lg md:text-xl text-[#6B7280] leading-relaxed">
-            Reduce huge file sizes heavily using our garbage-collection engine. Ideal for email limits. 100% Private.
-          </p>
-        </div>
+
+          <div className="text-center mb-8 w-full">
+            <div className="max-w-[1200px] mx-auto mb-4 w-full">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-[#111827] dark:text-white leading-[1.1]">
+                <span className="whitespace-nowrap block">Compress PDFs</span>
+                <span className="text-sky-500 italic pr-2">without</span> 
+                <span className="relative z-10 inline-block">
+                  losing quality.
+                  <span className="absolute bottom-1 left-0 w-full h-[20px] bg-amber-300/60 dark:bg-amber-300/30 -z-10 rounded-sm transform -rotate-1"></span>
+                </span>
+              </h1>
+            </div>
+            <p className="max-w-xl mx-auto text-base md:text-lg text-[#6B7280] dark:text-slate-400 leading-relaxed mt-4">
+              Reduce huge file sizes heavily using our garbage-collection engine. Ideal for email limits. 100% Private.
+            </p>
+          </div>
         
-        <div className="w-full max-w-2xl">
+        <div className="w-full max-w-md mx-auto">
           
           <div
             onDrop={(e) => { e.preventDefault(); setDragOver(false); handleFileChange(e.dataTransfer.files); }}
             onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
             onDragLeave={() => setDragOver(false)}
             onClick={() => !file && fileRef.current?.click()}
-            className={`relative rounded-3xl border-2 border-dashed px-8 py-10 text-center transition-all duration-300 shadow-sm ${
-              dragOver ? "border-sky-500 bg-sky-50/80 scale-[1.02]" : "border-slate-300 bg-[#FAF8F5] hover:border-sky-400 hover:bg-slate-50"
-            } ${!file ? "cursor-pointer py-16" : ""}`}
+            className={`group relative rounded-3xl border-2 border-dashed px-6 py-12 text-center transition-all duration-300 shadow-sm ${!file && "hover:shadow-lg hover:-translate-y-1"} ${
+              dragOver ? "border-sky-500 bg-sky-50/80 dark:bg-sky-900/30 scale-[1.02] shadow-md -translate-y-1" : "border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-sky-400 dark:hover:border-sky-500 hover:bg-slate-50 dark:hover:bg-slate-800"
+            } ${!file ? "cursor-pointer" : ""}`}
           >
             {!file ? (
               <>
-                <div className={`mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl transition-colors duration-300 ${
-                  dragOver ? "bg-sky-600 text-white shadow-lg shadow-sky-200" : "bg-sky-100 text-sky-600 group-hover:bg-sky-200"
+                <div className={`mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl transition-colors duration-300 ${
+                  dragOver ? "bg-sky-600 text-white shadow-lg shadow-sky-200 dark:shadow-sky-900/50" : "bg-sky-50 dark:bg-sky-900/40 text-sky-600 dark:text-sky-400 group-hover:bg-sky-100 dark:group-hover:bg-sky-800/60"
                 }`}>
-                  <FileText className="w-8 h-8" />
+                  <FileText className="w-7 h-7" />
                 </div>
-                <p className="text-xl font-bold text-slate-800 mb-2">Drag & drop your PDF here</p>
-                <p className="text-sm text-slate-500 mb-6">or click to browse from your computer</p>
+                <p className="text-lg font-bold text-slate-800 dark:text-white mb-1.5 transition-colors group-hover:text-sky-600 dark:group-hover:text-sky-400">Drag & drop your PDF</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400 mb-0">or click to browse</p>
               </>
             ) : (
               <div className="text-left w-full flex flex-col gap-3">
@@ -197,7 +192,9 @@ export default function CompressPdfTool() {
           
         </div>
       </div>
-    </main>
-  );
+    </div>
+  </main>
+);
 }
+
 

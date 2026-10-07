@@ -4,7 +4,7 @@ import { useRef, useEffect, useCallback, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   FileText, Zap, Brain, Search, ArrowRight, ChevronRight,
-  Upload, CheckCircle2, XCircle, Loader2, Plus, X, FileUp,
+  Upload, CheckCircle2, XCircle, Loader2, Plus, X, FileUp, Layers
 } from "lucide-react";
 import type { DocInfo, BatchProgress, DocProgress } from "@/lib/api";
 import { uploadDocumentsBatch } from "@/lib/api";
@@ -245,7 +245,7 @@ export function UploadCard({ onReady }: { onReady: (docs: DocInfo[]) => void }) 
   const successN    = batch?.docs?.filter((d) => d.stage === "done").length ?? 0;
 
   return (
-    <div className="w-full max-w-xl mx-auto">
+    <div className="w-full max-w-md mx-auto">
       <AnimatePresence mode="wait">
 
         {/* idle */}
@@ -258,25 +258,25 @@ export function UploadCard({ onReady }: { onReady: (docs: DocInfo[]) => void }) 
               onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
               onDragLeave={() => setDragOver(false)}
               onClick={() => fileRef.current?.click()}
-              className={`relative cursor-pointer rounded-3xl border-2 border-dashed px-8 py-16 text-center transition-all duration-300 shadow-sm hover:shadow-md ${
-                dragOver ? "border-indigo-500 bg-indigo-50/80 scale-[1.02]" : "border-slate-300 bg-white hover:border-indigo-400 hover:bg-slate-50"
+              className={`group relative cursor-pointer rounded-3xl border-2 border-dashed px-6 py-12 text-center transition-all duration-300 shadow-sm hover:shadow-lg hover:-translate-y-1 ${
+                dragOver ? "border-teal-500 bg-teal-50/80 dark:bg-teal-900/30 scale-[1.02] shadow-md -translate-y-1" : "border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:border-teal-400 dark:hover:border-teal-500 hover:bg-slate-50 dark:hover:bg-slate-800"
               }`}
             >
-              <div className={`mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl transition-colors duration-300 ${
-                dragOver ? "bg-indigo-600 text-white shadow-lg shadow-indigo-200" : "bg-indigo-100 text-indigo-600 group-hover:bg-indigo-200"
+              <div className={`mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl transition-colors duration-300 ${
+                dragOver ? "bg-teal-600 text-white shadow-lg shadow-teal-200 dark:shadow-teal-900/50" : "bg-teal-50 dark:bg-teal-900/40 text-teal-600 dark:text-teal-400 group-hover:bg-teal-100 dark:group-hover:bg-teal-800/60"
               }`}>
-                <FileUp className="w-8 h-8" />
+                <FileUp className="w-7 h-7" />
               </div>
-              <p className="text-xl font-bold text-slate-800 mb-2">Drag & drop your documents here</p>
-              <p className="text-sm text-slate-500 mb-6">or click to browse from your computer</p>
-              <div className="inline-flex items-center gap-2 rounded-full bg-slate-100 border border-slate-200 px-4 py-1.5 shadow-sm">
-                <Zap className="w-4 h-4 text-amber-500 fill-amber-500" />
-                <span className="text-xs font-bold text-slate-600 uppercase tracking-wide">Supports up to 10,000 pages</span>
+              <p className="text-lg font-bold text-slate-800 dark:text-white mb-1.5 transition-colors group-hover:text-teal-600 dark:group-hover:text-teal-400">Drag & drop documents</p>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mb-5">or click to browse</p>
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 px-3 py-1 shadow-sm">
+                <Layers className="w-3.5 h-3.5 text-teal-600 dark:text-teal-400" />
+                <span className="text-[11px] font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider">Up to 10,000 pages</span>
               </div>
             </div>
             <input ref={fileRef} type="file" accept="application/pdf,.pdf" multiple className="hidden"
               onChange={(e) => e.target.files && addFiles(e.target.files)} />
-            {error && <p className="mt-4 text-center text-sm font-semibold text-red-500 bg-red-50 py-2 rounded-lg border border-red-100">{error}</p>}
+            {error && <p className="mt-4 text-center text-sm font-semibold text-red-500 bg-red-50 dark:bg-red-900/30 py-2 rounded-lg border border-red-100 dark:border-red-800">{error}</p>}
           </motion.div>
         )}
 

@@ -193,9 +193,18 @@ async def extract_pdf(file: UploadFile = File(...), pages: str = Form(...)):
         raise HTTPException(status_code=500, detail=f"Failed to extract pages: {str(e)}")
 
 
+def color_to_hex(color_int: int) -> str:
+    """Converts PyMuPDF sRGB integer color to hex code string #RRGGBB."""
+    if not isinstance(color_int, int) or color_int < 0:
+        return "#000000"
+    r = (color_int >> 16) & 255
+    g = (color_int >> 8) & 255
+    b = color_int & 255
+    return f"#{r:02x}{g:02x}{b:02x}"
+
 @router.post("/extract-text")
 async def extract_pdf_text(file: UploadFile = File(...)):
-    """Extracts raw text perfectly from all pages without missing a single word."""
+    """Extracts text along with exact X/Y coordinates, font sizes, colors, bold/italic flags for 100% accurate editing."""
     if not file.filename.lower().endswith('.pdf'):
         raise HTTPException(status_code=400, detail="Only PDF files are supported.")
         
@@ -206,11 +215,68 @@ async def extract_pdf_text(file: UploadFile = File(...)):
         extracted_pages = []
         for page_num in range(len(doc)):
             page = doc[page_num]
-            # preserve layout roughly using "text" or "blocks"
-            text = page.get_text("text") 
+            page_rect = page.rect
+            p_width = page_rect.width if page_rect.width > 0 else 595.0
+            p_height = page_rect.height if page_rect.height > 0 else 842.0
+            
+            raw_dict = page.get_text("dict")
+            text_plain = page.get_text("text")
+            
+            # Extract structured blocks & spans with percentage coordinates
+            spans_list = []
+            for b in raw_dict.get("blocks", []):
+                if b.get("type") == 0:  # Text block
+                    for line in b.get("lines", []):
+                        for span in line.get("spans", []):
+                            txt = span.get("text", "").strip()
+                            if not txt:
+                                continue
+                            
+                            bbox = span.get("bbox", (0, 0, 0, 0))
+                            x0, y0, x1, y1 = bbox
+                            
+                            w = max(x1 - x0, 1.0)
+                            h = max(y1 - y0, 1.0)
+                            
+                            flags = span.get("flags", 0)
+                            font_name = span.get("font", "Arial")
+                            is_bold = bool(flags & 16) or ("bold" in font_name.lower())
+                            is_italic = bool(flags & 2) or ("italic" in font_name.lower() or "oblique" in font_name.lower())
+                            
+                            color_int = span.get("color", 0)
+                            color_hex = color_to_hex(color_int)
+                            
+                            # Convert coordinates to percentages relative to page size
+                            left_pct = (x0 / p_width) * 100.0
+                            top_pct = (y0 / p_height) * 100.0
+                            width_pct = (w / p_width) * 100.0
+                            height_pct = (h / p_height) * 100.0
+                            font_size_pt = span.get("size", 12.0)
+                            
+                            spans_list.append({
+                                "id": f"span_{page_num}_{len(spans_list)}",
+                                "text": span.get("text", ""),
+                                "x0": x0,
+                                "y0": y0,
+                                "x1": x1,
+                                "y1": y1,
+                                "left_pct": left_pct,
+                                "top_pct": top_pct,
+                                "width_pct": width_pct,
+                                "height_pct": height_pct,
+                                "font_size": font_size_pt,
+                                "font_family": font_name,
+                                "color": color_hex,
+                                "is_bold": is_bold,
+                                "is_italic": is_italic,
+                            })
+
             extracted_pages.append({
                 "page": page_num + 1,
-                "text": text
+                "width": p_width,
+                "height": p_height,
+                "text": text_plain,
+                "spans": spans_list
             })
             
         doc.close()
